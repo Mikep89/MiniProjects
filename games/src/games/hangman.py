@@ -82,8 +82,8 @@ def hangedman(hangman):
             ||
             ||
         ======================'''
-
     ]
+    return graphic[hangman]
 
 def game():
     dictionary = ['gnu','kernel','linux','megeia','penguin','ubuntu']
@@ -100,7 +100,7 @@ def game():
     while (letters_wrong != tries) and (''.join(clue) != word):
         letter = guess_letter()
         if len(letter) == 1 and letter.isalpha():
-            if letters_tried.find(letter) != 1:
+            if letters_tried.find(letter) != -1:
                 print(f"You've already picked {letter}")
             else:
                 letters_tried = letters_tried + letter
@@ -110,16 +110,19 @@ def game():
                     print(f"Sorry {letter} isn't what we're looking for.")
                 else:
                     print(f'Congratulations! {letter} is correct.')
+                    letters_right += 1
                     for i in range(word_length):
                         if letter == word[i]:
                             clue[i] = letter
         else:
             print('Choose another letter.')
-        hangedman(letters_wrong)
+        
+        print(hangedman(letters_wrong))
         print(" ".join(clue))
         print(f"Guesses:  {letters_tried}")
 
         if letters_wrong == tries:
+            computer_score += 1
             print("Game Over.")
             print(f"The word was: {word}")
             break
@@ -128,13 +131,10 @@ def game():
             print(f"The word was: {word}")
             player_score += 1
             break
-        return play_again()
+    return play_again()
 
 def guess_letter():
-    letter = input("Take a guess at our mystery word:")
-    letter.strip()
-    letter.lower()
-    return letter
+    return input("Take a guess at our mystery word:").strip().lower()
 
 def play_again():
     answer = input("Would you like to play again? y/n")
@@ -154,3 +154,6 @@ def start():
     while game():
         pass
     scores()
+
+if __name__ == "__main__":
+    start()
