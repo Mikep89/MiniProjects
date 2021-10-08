@@ -1,6 +1,9 @@
 import pygame
-from pygame.locals import *
 import sys
+import random
+
+from pygame.locals import *
+
 
 pygame.init()
 vec = pygame.math.Vector2
@@ -65,14 +68,18 @@ class Player(pygame.sprite.Sprite):
 class platform(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = pygame.Surface((WIDTH, 20))
-        self.surf.fill((255, 0, 0))
-        self.rect = self.surf.get_rect(center = (WIDTH/2, HEIGHT ))
+        self.surf = pygame.Surface((random.randint(50,100), 12))
+        self.surf.fill((0, 255, 0))
+        self.rect = self.surf.get_rect(center = (random.randint(0, WIDTH-10),
+                                                 random.randint(0, HEIGHT-30)))
     def move(self):
         pass
 
 
 PT1 = platform()
+PT1.surf = pygame.Surface((WIDTH, 20))
+PT1.surf.fill((255, 0, 0))
+PT1.rect = PT1.surf.get_rect(center = (WIDTH/2, HEIGHT -10))
 P1 = Player()
 
 all_sprites = pygame.sprite.Group()
@@ -81,6 +88,20 @@ all_sprites.add(P1)
 
 platforms = pygame.sprite.Group()
 platforms.add(PT1)
+
+def plat_gen():
+    while len(platforms) < 7:
+        width = random.randrange(50,100)
+        p = platform()
+        p.rect.center = (random.randrange(0, WIDTH - width),
+                         random.randrange(-50, 0))
+        platforms.add(p)
+        all_sprites.add(p)
+
+for x in range(random.randint(5,6)):
+    pl = platform()
+    platforms.add(pl)
+    all_sprites.add(pl)
 
 while True:
     for event in pygame.event.get():
@@ -92,10 +113,20 @@ while True:
                 P1.jump()
     
     displaysurface.fill((0,0,0))
-    P1.move()
-
+    P1.update()
+    
+    plat_gen()
+    
+    if P1.rect.top <= HEIGHT / 3:
+        P1.pos.y += abs(P1.vel.y)
+        for plat in platforms:
+            plat.rect.y += abs(P1.vel.y)
+            if plat.rect.top >= HEIGHT:
+                plat.kill()
+    
     for entity in all_sprites:
         displaysurface.blit(entity.surf, entity.rect)
+        entity.move()
     
     pygame.display.update()
     FramePerSec.tick(FPS)
