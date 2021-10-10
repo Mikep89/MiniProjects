@@ -11,10 +11,12 @@ BLUE = (0, 0 , 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
+SCREEN = SCREEN_WIDTH, SCREEN_HEIGHT = (400, 600)
+
 FPS = 30
 FramePerSec = pygame.time.Clock() 
 
-DISPLAYSURF = pygame.display.set_mode((400,600))
+DISPLAYSURF = pygame.display.set_mode(SCREEN_WIDTH)
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
 
