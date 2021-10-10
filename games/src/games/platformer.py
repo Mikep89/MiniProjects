@@ -23,7 +23,7 @@ pygame.display.set_caption("Game")
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = pygame.image.load("snowman.png")
+        self.surf = pygame.image.load("assets/platformer/snowman.png")
         self.rect = self.surf.get_rect()
 
         self.pos = vec((10, 360))
@@ -81,7 +81,7 @@ class platform(pygame.sprite.Sprite):
         super().__init__()
         if width == 0: width = random.randint(50, 120)
 
-        self.image = pygame.image.load("platform.png")
+        self.image = pygame.image.load("assets/platformer/platform.png")
         self.surf = pygame.transform.scale(self.image, (width, height))
         self.rect = self.surf.get_rect(center = (random.randint(0, WIDTH-10),
                                                  random.randint(0, HEIGHT-30)))
@@ -106,13 +106,14 @@ class Coin(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
         
-        self.image = pygame.image.load("Coin.png")
+        self.image = pygame.image.load("assets/platformer/Coin.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
     def update(self):
         if self.rect.colliderect(P1.rect):
             P1.score += 5
             self.kill()
+
 def check(platform, groupies):
     if pygame.sprite.spritecollideany(platform, groupies):
         return True
@@ -166,7 +167,7 @@ for x in range(random.randint(4,5)):
     platforms.add(pl)
     all_sprites.add(pl)
 
-background = pygame.image.load("background.png")
+background = pygame.image.load("assets/platformer/background.png")
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
