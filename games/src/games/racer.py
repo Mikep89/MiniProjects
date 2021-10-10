@@ -17,6 +17,9 @@ SCREEN_HEIGHT = 600
 SPEED = 5
 SCORE = 0
 
+pygame.mixer.music.load('assets/racer/background.wav')
+pygame.mixer.music.play(-1)
+
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 60)
 game_over = font.render("Game Over", True, BLACK)
@@ -55,10 +58,10 @@ class Player(pygame.sprite.Sprite):
         pressed_keys = pygame.key.get_pressed()
         
         if self.rect.left > 0:
-            if pressed_keys['K_LEFT']:
+            if pressed_keys[K_LEFT]:
                 self.rect.move_ip(-5, 0)
         if self.rect.right < SCREEN_WIDTH:
-            if pressed_keys['K_RIGHT']:
+            if pressed_keys[K_RIGHT]:
                 self.rect.move_ip(5, 0)
 
 P1 = Player()
@@ -77,7 +80,7 @@ while True:
     pygame.display.update()
 
     for event in pygame.event.get():
-        if event.ype == INC_SPEED:
+        if event.type == INC_SPEED:
             SPEED += 0.5
         
         if event.type == QUIT:
