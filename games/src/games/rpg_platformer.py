@@ -50,7 +50,28 @@ class Player(pygame.sprite.Sprite):
         self.acc = vec(0, 0)
         self.direction = "RIGHT"
     def move(self):
-        pass
+        if abs(self.vel.x) > 0.3:
+            self.running = True
+        else:
+            self.running = FALSE
+        
+        pressed_keys = pygame.key.get_pressed()
+
+        if pressed_keys[K_LEFT]:
+            self.acc.x = -ACC
+        if pressed_keys[K_RIGHT]:
+            self.acc.x = ACC
+
+        self.acc.x += self.vel.x * FRIC
+        self.vel += self.acc
+        self.pos += self.vel + 0.5 * self.acc
+
+        if self.pos.x > WIDTH:
+            self.pos.x = WIDTH
+        if self.pos.x < 0:
+            self.pos.x = 0
+        
+        self.rect.midbottom = self.pos
     def update(self):
         pass
     def attack(self):
@@ -78,6 +99,7 @@ while True:
             pass
     background.render()
     ground.render()
+    player.move()
     displaysurface.blit(player.image, player.rect)
 
 
