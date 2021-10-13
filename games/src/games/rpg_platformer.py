@@ -36,6 +36,19 @@ class Ground(pygame.sprite.Sprite):
 
     def render(self):
         displaysurface.blit(self.image, (self.rect.x, self.rect.y))
+attack_ani_R = [pygame.image.load(f"{ASSETS}Player_Sprite_R.png"), pygame.image.load(f"{ASSETS}Player_Attack_R.png"),
+                pygame.image.load(f"{ASSETS}Player_Attack2_R.png"), pygame.image.load(f"{ASSETS}Player_Attack2_R.png"), 
+                pygame.image.load(f"{ASSETS}Player_Attack3_R.png"), pygame.image.load(f"{ASSETS}Player_Attack3_R.png"),
+                pygame.image.load(f"{ASSETS}Player_Attack4_R.png"), pygame.image.load(f"{ASSETS}Player_Attack4_R.png"),
+                pygame.image.load(f"{ASSETS}Player_Attack5_R.png"), pygame.image.load(f"{ASSETS}Player_Attack5_R.png"),
+                pygame.image.load(f"{ASSETS}Player_Sprite_R.png")]
+
+attack_ani_L = [pygame.image.load(f"{ASSETS}Player_Sprite_L.png"), pygame.image.load(f"{ASSETS}Player_Attack_L.png"),
+                pygame.image.load(f"{ASSETS}Player_Attack2_L.png"), pygame.image.load(f"{ASSETS}Player_Attack2_L.png"), 
+                pygame.image.load(f"{ASSETS}Player_Attack3_L.png"), pygame.image.load(f"{ASSETS}Player_Attack3_L.png"),
+                pygame.image.load(f"{ASSETS}Player_Attack4_L.png"), pygame.image.load(f"{ASSETS}Player_Attack4_L.png"),
+                pygame.image.load(f"{ASSETS}Player_Attack5_L.png"), pygame.image.load(f"{ASSETS}Player_Attack5_L.png"),
+                pygame.image.load(f"{ASSETS}Player_Sprite_L.png")]
 
 run_ani_R = [pygame.image.load(f"{ASSETS}Player_Sprite_R.png"), pygame.image.load(f"{ASSETS}Player_Sprite2_R.png"),
              pygame.image.load(f"{ASSETS}Player_Sprite3_R.png"), pygame.image.load(f"{ASSETS}Player_Sprite4_R.png"),
@@ -57,8 +70,12 @@ class Player(pygame.sprite.Sprite):
         self.vel = vec(0,0)
         self.acc = vec(0, 0)
         self.direction = "RIGHT"
+        self.running = False
         self.jumping = False
         self.move_frame = 0
+
+        self.attacking = False
+        self.attack_frame = 0
 
     def move(self):
         self.acc = vec(0, 0.5)
@@ -101,7 +118,7 @@ class Player(pygame.sprite.Sprite):
             if self.vel.x > 0:
                 self.image = run_ani_R[self.move_frame]
                 self.direction = "RIGHT"
-            elif self.vel.y < 0:
+            elif self.vel.x < 0:
                 self.image = run_ani_L[self.move_frame]
                 self.direction = "LEFT"
             self.move_frame += 1
@@ -112,8 +129,27 @@ class Player(pygame.sprite.Sprite):
                 self.image = run_ani_R[self.move_frame]
             elif self.direction == "LEFT":
                 self.image = run_ani_L[self.move_frame]
+    
+    
     def attack(self):
-        pass
+        if self.attack_frame > 10:
+            self.attack_frame = 0
+            self.attacking = False
+        
+        if self.direction == "RIGHT":
+            self.image = attack_ani_R[self.attack_frame]
+        if self.direction == "LEFT":
+            self.correction()
+            self.image = attack_ani_L[self.attack_frame]
+        self.attack_frame += 1
+    
+    def correction(self):
+        if self.attack_frame == 1:
+            self.pos.x -= 20
+        if self.attack_frame == 10:
+            self.pos.x += 20
+    
+    
     def jump(self):
         self.rect.x += 1
         hits = pygame.sprite.spritecollide(self, ground_group, False)
@@ -152,8 +188,15 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 player.jump()
+            if event.key == pygame.K_RETURN:
+                if player.attacking == False:
+                    player.attack()
+                    player.attacking = True
     background.render()
     ground.render()
+    player.update()
+    if player.attacking == True:
+        player.attack()
     player.move()
     displaysurface.blit(player.image, player.rect)
 
