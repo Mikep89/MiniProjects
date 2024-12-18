@@ -1,10 +1,10 @@
-package main
+package mean
 
 import (
 	"fmt"
 )
 
-func main() {
+func mean() {
 	var x float64
 	var y float64
 
